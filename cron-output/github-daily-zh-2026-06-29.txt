@@ -1,0 +1,92 @@
+==================================================
+GitHub & Hacker News 精選報告 — 2026年6月29日
+==================================================
+
+🔥 GitHub Trending（今日）
+
+1. simplex-chat / simplex-chat (⭐ 14,918 (+1,183) | Haskell)
+   SimpleX - 無用戶 ID 的私密訊息網絡，100% 私隱設計，iOS、Android 和桌面版
+   https://github.com/simplex-chat/simplex-chat
+
+2. ripienaar / free-for-dev (⭐ 125,110 (+472) | HTML)
+   SaaS、PaaS、IaaS 免費服務列表，devops 和 infradev 必備資源
+   https://github.com/ripienaar/free-for-dev
+
+3. [AI] commaai / openpilot (⭐ 62,349 (+265) | Python)
+   機械人作業系統，支援 300+ 車款的駕駛輔助系統升級
+   https://github.com/commaai/openpilot
+
+4. [AI] xbtlin / ai-berkshire (⭐ 5,238 (+1,456) | Python)
+   AI 時代的伯克希爾：巴菲特·芒格·段永平·李錄大師方法論 + 多Agent並行研究框架
+   https://github.com/xbtlin/ai-berkshire
+
+5. Robbyant / lingbot-map (⭐ 8,177 (+372) | Python)
+   用於從流數據重建場景的前饋 3D foundation model
+   https://github.com/Robbyant/lingbot-map
+
+6. [AI] DeusData / codebase-memory-mcp (⭐ 19,500 (+2,162) | C)
+   高效能代碼智能 MCP 服務器，將代碼庫索引為持久知識圖譜，平均毫秒級，158 種語言
+   https://github.com/DeusData/codebase-memory-mcp
+
+7. cupy / cupy (⭐ 11,489 (+172) | Python)
+   GPU 版 NumPy & SciPy
+   https://github.com/cupy/cupy
+
+8. altic-dev / FluidVoice (⭐ 3,675 (+491) | Swift)
+   macOS 離線語音轉文字 App，完全本地運行
+   https://github.com/altic-dev/FluidVoice
+
+9. [AI] opendatalab / MinerU (⭐ 71,519 (+426) | Python)
+   將 PDF 和 Office 文件轉換為 LLM 適用的 markdown/JSON，用於 Agentic 工作流
+   https://github.com/opendatalab/MinerU
+
+10. [AI] HKUDS / Vibe-Trading (⭐ 14,254 (+490) | Python)
+   Vibe-Trading：你的個人交易 Agent
+   https://github.com/HKUDS/Vibe-Trading
+
+11. ByteByteGoHq / system-design-101 (⭐ 84,380 (+132) | Unknown)
+   用視覺和簡單語言解釋複雜系統，幫助準備系統設計面試
+   https://github.com/ByteByteGoHq/system-design-101
+
+12. [AI] usestrix / strix (⭐ 26,664 (+88) | Python)
+   開源 AI 黑客，自動發現並修補應用漏洞
+   https://github.com/usestrix/strix
+
+13. [AI] browser-use / video-use (⭐ 10,966 (+324) | Python)
+   用 coding agents 剪片
+   https://github.com/browser-use/video-use
+
+📰 Hacker News 精選（AI / 技術相關）
+
+1. GLM 5.2 beats Claude in our benchmarks (224 points, 79 comments)
+   https://semgrep.dev/blog/2026/we-have-mythos-at-home-glm-52-beats-claude-in-our-cyber-benchmarks/
+
+2. I used Claude Code to get a second opinion on my MRI (276 points, 380 comments)
+   https://antoine.fi/mri-analysis-using-claude-code-opus
+
+3. Librepods: AirPods liberated (197 points, 59 comments)
+   https://github.com/librepods-org/librepods
+
+4. Professor denounces mass AI fraud on an exam at Brown (92 points, 104 comments)
+   https://english.elpais.com/education/2026-06-28/ai-fraud-at-brown-university-academic-integrity-is-at-risk.html
+
+5. TOP500 at ISC'26: We have a New Number 1 Supercomputer (42 points, 27 comments)
+   https://chipsandcheese.com/p/top500-at-isc26-we-have-a-new-number
+
+6. Show HN: Bash4LLM+ – A lightweight, dependency-free Bash wrapper for LLM APIs (17 points, 10 comments)
+   https://github.com/kamaludu/bash4llm/
+
+7. Tokenmaxxing is dead, long live tokenmaxxing (85 points, 112 comments)
+   https://12gramsofcarbon.com/p/agentics-tech-things-tokenmaxxing
+
+8. Do LLMs pass the mirror test? (22 points, 15 comments)
+   https://blog.pascalschuster.de/article/do-llms-pass-the-mirror-test
+
+💡 本日重點
+- codebase-memory-mcp 單日狂攬 2,162 stars，以 C 語言實現毫秒級代碼庫索引，支援 158 種語言，是今天最具突破性的 AI 開發工具
+- ai-berkshire 結合巴菲特價值投資理念與多 Agent 並行研究，1,456 stars 反映 AI + 金融的熱度不減
+- Vibe-Trading（港大團隊）和 browser-use/video-use 分別瞄準個人交易 Agent 和 AI 剪片場景，AI Agent 落地應用持續擴展
+
+--------------------------------------------------
+
+報告由 Hermes Agent 自動生成 | 2026年6月29日 06:30

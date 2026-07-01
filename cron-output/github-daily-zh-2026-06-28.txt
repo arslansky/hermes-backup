@@ -1,0 +1,100 @@
+==================================================
+GitHub & Hacker News 精選報告 — 2026年06月28日
+==================================================
+
+🔥 GitHub Trending Top 15（今日）
+
+1. simplex-chat / simplex-chat (⭐ 13,775 (+1,470) | Haskell)
+   首個不需要任何用戶ID的通訊網絡，100%私隱設計！iOS、Android和桌面應用 📱
+   https://github.com/simplex-chat/simplex-chat
+
+2. google-labs-code / design.md (⭐ 22,290 (+1,542) | TypeScript) [AI]
+   為編碼Agent描述視覺身份的格式規範。DESIGN.md讓Agent對設計系統有持久結構化的理解
+   https://github.com/google-labs-code/design.md
+
+3. xbtlin / ai-berkshire (⭐ 4,049 (+686) | Python) [AI]
+   AI時代的伯克希爾——基於Claude Code的價值投資研究框架。巴菲特·芒格·段永平·李錄四大大師方法論 + 多Agent並行研究
+   https://github.com/xbtlin/ai-berkshire
+
+4. JCodesMore / ai-website-cloner-template (⭐ 22,077 (+750) | TypeScript) [AI]
+   用一個命令Clone任何網站，適用於AI編碼Agent
+   https://github.com/JCodesMore/ai-website-cloner-template
+
+5. garrytan / gstack (⭐ 117,204 (+674) | TypeScript) [AI]
+   使用Garry Tan的精確Claude Code配置：23個工具充當CEO、Designer、Eng Manager、Release Manager等角色
+   https://github.com/garrytan/gstack
+
+6. hugohe3 / ppt-master (⭐ 33,021 (+589) | Python) [AI]
+   AI從任何文檔生成真實可編輯的PowerPoint——原生形狀和動畫，演講者備註語音旁白
+   https://github.com/hugohe3/ppt-master
+
+7. IceWhaleTech / CasaOS (⭐ 35,759 (+502) | Go)
+   簡單易用的開源個人雲系統
+   https://github.com/IceWhaleTech/CasaOS
+
+8. ripienaar / free-for-dev (⭐ 124,144 (+459) | HTML)
+   對DevOps和infradev有價值的SaaS、PaaS和IaaS免費服務列表
+   https://github.com/ripienaar/free-for-dev
+
+9. commaai / openpilot (⭐ 62,052 (+322) | Python)
+   openpilot是一個robotics操作系統，目前支援300+款車型的駕駛輔助系統升級
+   https://github.com/commaai/openpilot
+
+10. NanmiCoder / MediaCrawler (⭐ 53,756 (+394) | Python)
+    小紅書、抖音、快手、B站、微博、百度貼吧、知乎的全平台評論爬蟲
+    https://github.com/NanmiCoder/MediaCrawler
+
+11. anomalyco / opencode (⭐ 179,697 (+428) | TypeScript) [AI]
+    開源的編碼Agent
+    https://github.com/anomalyco/opencode
+
+12. topoteretes /ognee (⭐ 23,956 (+808) | Python) [AI]
+    開源AI記憶平台，為Agent提供持久長期記憶，基于自托管知識圖譜引擎
+    https://github.com/topoteretes/cognee
+
+13. luongnv89 / claude-howto (⭐ 38,593 (+138) | Python) [AI]
+    視覺化、範例驅動的Claude Code指南——從基礎到進階Agent，含即用模板
+    https://github.com/luongnv89/claude-howto
+
+14. Fission-AI / OpenSpec (⭐ 57,096 (+167) | TypeScript) [AI]
+    為AI編碼助手而生的規格驅動開發（SDD）
+    https://github.com/Fission-AI/OpenSpec
+
+15. Anil-matcha / Open-Generative-AI (⭐ 21,351 (+254) | JavaScript) [AI]
+    無限制開源AI影片平台——200+模型（Flux、Midjourney、Kling、Sora、Veo），無內容過濾，自托管，MIT許可
+    https://github.com/Anil-matcha/Open-Generative-AI
+
+📰 Hacker News 精選（AI / 技術相關）
+
+1. DS park: Speculative decoding accelerates LLM inference [pdf] (706 points, 290 comments)
+   https://github.com/deepseek-ai/DeepSpec/blob/main/DSpark_paper.pdf
+
+2. Anonymous GitHub account mass-dropping undisclosed 0-days (567 points, 227 comments)
+   https://github.com/bikini/exploitarium
+
+3. AI learns the "dark art" of RFIC design (160 points, 100 comments)
+   https://spectrum.ieee.org/ai-radio-chip-design
+
+4. Show HN: Adrafinil – keep a lid-closed Mac awake only while agents work (40 points, 32 comments)
+   https://github.com/kageroumado/adrafinil
+
+5. Fintech Engineering Handbook (428 points, 144 comments)
+   https://w.pitula.me/fintech-engineering-handbook/
+
+6. The case for physical media ownership (326 points, 216 comments)
+   https://dervis.de/physical/
+
+7. Suspicious Discontinuities (2020) (188 points, 43 comments)
+   https://danluu.com/discontinuities/
+
+8. IP Crawl: Living atlas of open webcams discovered on the public internet (146 points, 83 comments)
+   https://ipcrawl.com/
+
+💡 本日重點
+- 今日GitHub Trending最大亮點係 google-labs-code/design.md（+1,542 stars），佢提出咗一個新格式規範，讓AI coding agent可以持久理解設計系統——呢個方向好實際，值得留意
+- AI編碼工具生態繼續爆發：gstack（23種角色工具）、cognee（Agent記憶平台）、Open-Generative-AI（無限制AI影片生成）都喺今日Trending，可見agent工具鏈係當下最熱賽道
+- DeepSeek發表DS park論文（Speculative decoding加速LLM推理），喺HN獲得706分最高分，顯示推測解碼技術仍然係LLM優化嘅重要方向
+
+--------------------------------------------------
+
+報告由 Hermes Agent 自動生成 | 2026年06月28日 06:33

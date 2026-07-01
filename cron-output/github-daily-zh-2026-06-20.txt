@@ -1,0 +1,124 @@
+============================================================
+GitHub & Hacker News 精選報告 — 2026年06月20日
+============================================================
+
+🔥 GitHub Trending（今日）
+
+1. DeusData / codebase-memory-mcp (⭐ 5,232 | C)
+   High-performance code intelligence MCP server. Indexes codebases into a persistent knowledge graph — average repo in milliseconds. 158 languages, sub-ms queries, 99% fewer tokens. Single static binary, zero dependencies.
+   https://github.com/DeusData / codebase-memory-mcp
+
+2. n0-computer / iroh (⭐ 9,635 | Rust)
+   IP addresses break, dial keys instead. Modular networking stack in Rust.
+   https://github.com/n0-computer / iroh
+
+3. Panniantong / Agent-Reach (⭐ 33,140 | Python)
+   Give your AI agent eyes to see the entire internet. Read & search Twitter, Reddit, YouTube, GitHub, Bilibili, XiaoHongShu — one CLI, zero API fees.
+   https://github.com/Panniantong / Agent-Reach
+
+4. meshery / meshery (⭐ 11,014 | TypeScript)
+   Meshery, the cloud native manager
+   https://github.com/meshery / meshery
+
+5. obra / superpowers (⭐ 231,039 | Shell)
+   An agentic skills framework & software development methodology that works.
+   https://github.com/obra / superpowers
+
+6. google-research / timesfm (⭐ 21,876 | Python)
+   TimesFM (Time Series Foundation Model) is a pretrained time-series foundation model developed by Google Research for time-series forecasting.
+   https://github.com/google-research / timesfm
+
+7. RocketChat / Rocket.Chat (⭐ 45,571 | TypeScript)
+   The Secure CommsOS™ for mission-critical operations
+   https://github.com/RocketChat / Rocket.Chat
+
+8. continuedev / continue (⭐ 33,889 | TypeScript)
+   open-source coding agent
+   https://github.com/continuedev / continue
+
+9. penpot / penpot (⭐ 50,076 | Clojure)
+   Penpot: The open-source design tool for design and code collaboration
+   https://github.com/penpot / penpot
+
+10. krahets / hello-algo (⭐ 127,432 | Java)
+   《Hello 算法》：动画图解、一键运行的数据结构与算法教程。支持简中、繁中、English、日本語，提供 Python, Java, C++, C, C#, JS, Go, Swift, Rust, Ruby, Kotlin, TS, Dart 等代码实现
+   https://github.com/krahets / hello-algo
+
+11. Universal-Debloater-Alliance / universal-android-debloater-next-generation (⭐ 7,633 | Rust)
+   Cross-platform GUI written in Rust using ADB to debloat non-rooted Android devices. Improve your privacy, the security and battery life of your device.
+   https://github.com/Universal-Debloater-Alliance / universal-android-debloater-next-generation
+
+12. mattpocock / skills (⭐ 133,521 | Shell)
+   Skills for Real Engineers. Straight from my .claude directory.
+   https://github.com/mattpocock / skills
+
+13. yairm210 / Unciv (⭐ 10,650 | Kotlin)
+   Open-source Android/Desktop remake of Civ V
+   https://github.com/yairm210 / Unciv
+
+14. freeCodeCamp / freeCodeCamp (⭐ 449,127 | TypeScript)
+   freeCodeCamp.org's open-source codebase and curriculum. Learn math, programming, and computer science for free.
+   https://github.com/freeCodeCamp / freeCodeCamp
+
+15. bytedance / UI-TARS-desktop (⭐ 36,686 | TypeScript)
+   The Open-Source Multimodal AI Agent Stack: Connecting Cutting-Edge AI Models and Agent Infra
+   https://github.com/bytedance / UI-TARS-desktop
+
+16. nautechsystems / nautilus_trader (⭐ 23,800 | Rust)
+   Production-grade Rust-native trading engine with deterministic event-driven architecture
+   https://github.com/nautechsystems / nautilus_trader
+
+17. chatwoot / chatwoot (⭐ 32,361 | Ruby)
+   Open-source live-chat, email support, omni-channel desk. An alternative to Intercom, Zendesk, Salesforce Service Cloud etc. 🔥💬
+   https://github.com/chatwoot / chatwoot
+
+18. calesthio / OpenMontage (⭐ 5,294 | Python)
+   World's first open-source, agentic video production system. 12 pipelines, 52 tools, 500+ agent skills. Turn your AI coding assistant into a full video production studio.
+   https://github.com/calesthio / OpenMontage
+
+19. alexzhang13 / rlm (⭐ 4,914 | Python)
+   General plug-and-play inference library for Recursive Language Models (RLMs), supporting various sandboxes.
+   https://github.com/alexzhang13 / rlm
+
+20. makeplane / plane (⭐ 51,270 | TypeScript)
+   🔥🔥🔥 Open-source Jira, Linear, Monday, and ClickUp alternative. Plane is a modern project management platform to manage tasks, sprints, docs, and triage.
+   https://github.com/makeplane / plane
+
+📰 Hacker News 精選（AI / 技術相關）
+
+1. Runing GLM-5.2 on local hardware (125 points, 50 comments)
+   https://unsloth.ai/docs/models/glm-5.2
+
+2. Optocam Zero: a Pi Zero based digital camera made using off the shelf components (85 points, 21 comments)
+   https://github.com/dorukkumkumoglu/optocamzero
+
+3. Cyberdecks, going analog, and convivial technology (10 points, 3 comments)
+   https://blog.hydroponictrash.solar/cyberdecks-going-analog-and-convivial-technology/
+
+4. Moebius: 0.2B image inpainting model with 10B-level performance (217 points, 64 comments)
+   https://hustvl.github.io/Moebius/
+
+5. Is it time for a new Embedded Linux build system? (20 points, 13 comments)
+   https://yoebuild.org/blog/time-for-a-new-build-system/
+
+6. Show HN: Oak – Git alternative designed for agents (140 points, 131 comments)
+   https://oak.space/oak/oak
+
+7. Canada plans 'nuclear renaissance' with up to 10 reactors built by 2040 (242 points, 115 comments)
+   https://www.cbc.ca/news/politics/federal-nuclear-strategy-9.7244509
+
+💡 本日重點
+
+• calesthio/OpenMontage 單日 +2,938 ⭐ — 世界首個开源 agentic 影片製作系統，
+  12 條 pipeline、52 個工具、500+ agent skills，把 AI 编程助手變成完整影片工作室
+• mattpocock/skills 單日 +2,051 ⭐ — 、工程技能 collections 持續爆發，Matt Pocock
+  將 .claude directory 開源供所有 AI coding agent 使用
+• palmier-io/palmier-pro 單日 +2,463 ⭐ — macOS AI 影片編輯器，新上榜即爆
+• OpenMontage + palmier-pro + jamiepine/voicebox (AI voice studio) 全部係 AI 多媒體
+  相關，三箭頭齊發，呢個係近期明顯趨勢
+• mukul975/Anthropic-Cybersecurity-Skills (+956 ⭐) — 817 個網絡安全 skills，
+  映射 6 大框架（MITRE ATT&CK、NIST CSF 2.0、MITRE ATLAS 等），支持所有主流 agent
+• Oak – Git alternative designed for agents (140 HN points) — 專為 AI agent 設計的 Git 替代品
+
+------------------------------------------------------------
+報告由 Hermes Agent 自動生成 | 2026年06月20日 08:29

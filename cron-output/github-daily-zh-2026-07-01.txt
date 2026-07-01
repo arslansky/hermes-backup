@@ -1,0 +1,93 @@
+==================================================
+GitHub & Hacker News 精選報告 — 2026年07月01日
+==================================================
+
+🔥 GitHub Trending Top 15（今日）
+
+1. obra/superpowers [AI] (⭐ 242,436 (+884 today) | Shell)
+   An agentic skills framework & software development methodology that works.
+   https://github.com/obra/superpowers
+
+2. msitarzewski/agency-agents [AI] (⭐ 120,755 (+1,793 today) | Shell)
+   A complete AI agency at your fingertips — each agent is a specialized expert with personality, processes, and proven deliverables.
+   https://github.com/msitarzewski/agency-agents
+
+3. ripienaar/free-for-dev (⭐ 127,286 (+740 today) | HTML)
+   A list of SaaS, PaaS and IaaS offerings that have free tiers of interest to devops and infradev
+   https://github.com/ripienaar/free-for-dev
+
+4. simplex-chat/simplex-chat (⭐ 17,313 (+1,229 today) | Haskell)
+   SimpleX — the first messaging network operating without user identifiers of any kind — 100% private by design!
+   https://github.com/simplex-chat/simplex-chat
+
+5. xbtlin/ai-berkshire [AI] (⭐ 7,456 (+966 today) | Python)
+   AI 時代的伯克希爾：基於 Claude Code / Codex 的價值投資研究框架。巴菲特·芒格·段永平·李錄四大大師方法論 + 多Agent並行研究。
+   https://github.com/xbtlin/ai-berkshire
+
+6. HKUDS/Vibe-Trading [AI] (⭐ 15,753 (+719 today) | Python)
+   "Vibe-Trading: Your Personal Trading Agent"
+   https://github.com/HKUDS/Vibe-Trading
+
+7. browser-use/video-use [AI] (⭐ 12,538 (+722 today) | Python)
+   Edit videos with coding agents
+   https://github.com/browser-use/video-use
+
+8. hasaneyldrm/exercises-dataset (⭐ 6,451 (+1,413 today) | HTML)
+   A comprehensive dataset of 433 fitness exercises with name, category, target muscle group, equipment, instructions, thumbnail image, and animation video.
+   https://github.com/hasaneyldrm/exercises-dataset
+
+9. ogulcancelik/herdr [AI] (⭐ 8,961 (+485 today) | Rust)
+   agent multiplexer that lives in your terminal.
+   https://github.com/ogulcancelik/herdr
+
+10. diegosouzapw/OmniRoute [AI] (⭐ 8,426 (+459 today) | TypeScript)
+    Free AI gateway: one endpoint, 231+ providers (50+ free), connect Claude Code, Codex, Cursor, Cline & Copilot. RTK+Caveman stacked compression saves 15-95% tokens.
+    https://github.com/diegosouzapw/OmniRoute
+
+11. usestrix/strix [AI] (⭐ 28,067 (+395 today) | Python)
+    Open-source AI penetration testing tool to find and fix your app's vulnerabilities.
+    https://github.com/usestrix/strix
+
+12. FluidVoice [AI] (⭐ 4,883 (+586 today) | Swift)
+    Fastest and only macOS Dictation app with on-device STT and custom trained AI enhancement model — Local Wispr Flow alternative.
+    https://github.com/altic-dev/FluidVoice
+
+13. google/agents-cli [AI] (⭐ 4,135 (+433 today) | Python)
+    The CLI and skills that turn any coding assistant into an expert at creating, evaluating, and deploying AI agents on Google Cloud.
+    https://github.com/google/agents-cli
+
+14. facebook/astryx (⭐ 1,721 (+399 today) | TypeScript)
+    An open source design system that's fully customizable and agent ready
+    https://github.com/facebook/astryx
+
+15. Mebus/cupp (⭐ 6,085 (+61 today) | Python)
+    Common User Passwords Profiler (CUPP)
+    https://github.com/Mebus/cupp
+
+📰 Hacker News 精選（AI / 技術相關）
+
+1. Claude Sonnet 5 (748 points, 413 comments)
+   https://www.anthropic.com/news/claude-sonnet-5
+
+2. Claude Code is steganographically marking requests (1208 points, 314 comments)
+   https://thereallo.dev/blog/claude-code-prompt-steganography
+
+3. Building a custom octocopter from scratch with no prior hardware experience (302 points, 68 comments)
+   https://karolina.mgdubiel.com/drone/
+
+4. I built a mmWave material classification radar (2025) (114 points, 30 comments)
+   https://gauthier-lechevalier.com/radar
+
+5. I ported Kubernetes to the browser (90 points, 21 comments)
+   https://ngrok.com/blog/i-ported-kubernetes-to-the-browser
+
+6. Waveloop: What Fable left me (60 points, 14 comments)
+   https://neynt.ca/writing/waveloop/
+
+💡 本日重點
+
+今日 GitHub Trending 最大亮點係「AI Agent 井噴」——superpowers (⭐242k) 同 agency-agents (⭐120k) 分別佔據頭兩位，顯示 agentic skills 框架正在席捲開發者社群。價值投資領域都有新玩家，ai-berkshire 用多 Agent 並行研究巴菲特/段永平方法論，頗有創意。Google 亦加入戰場推出 agents-cli，幫你在 GCP 上部署 AI Agent。整體趨勢：Agent 唔再係口號，係真正落地既開發工具。
+
+--------------------------------------------------
+
+報告由 Hermes Agent 自動生成 | 2026年07月01日 06:38
