@@ -245,12 +245,14 @@ approvals:
   timeout: 60
 command_allowlist:
 - in-place edit of system config
+- git force push (rewrites remote history)
 - kill process via pgrep expansion (self-termination)
 - pipe remote content to shell
 - copy/move file into /etc/
 - shell command via -c/-lc flag
 - SQL TRUNCATE
 - recursive delete
+- git branch force delete
 - overwrite system file via redirection
 - force kill processes
 - delete in root path
