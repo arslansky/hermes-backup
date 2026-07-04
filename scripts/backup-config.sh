@@ -132,3 +132,5 @@ echo ""
 echo "=== Config Backup Complete ==="
 echo "Config dir: $CONFIG_DIR"
 echo "Git commit: $TIMESTAMP"
+
+# EOF
