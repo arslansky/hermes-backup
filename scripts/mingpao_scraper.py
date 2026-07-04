@@ -42,8 +42,23 @@ SECTIONS = [
     ("即時國際", "https://news.mingpao.com/ins/國際/section/latest/s00005"),
 ]
 
-# MiniMax API (from .env)
-MINIMAX_API_KEY = os.getenv("MINIMAX_API_KEY", "")
+# MiniMax API (from environment or ~/.hermes/.env)
+def _load_env_key(name: str) -> str:
+    val = os.getenv(name, "")
+    if val:
+        return val.strip().strip('"').strip("'")
+    env_path = os.path.expanduser("~/.hermes/.env")
+    try:
+        with open(env_path, "r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if line.startswith(name + "="):
+                    return line.split("=", 1)[1].strip().strip('"').strip("'")
+    except FileNotFoundError:
+        pass
+    return ""
+
+MINIMAX_API_KEY = _load_env_key("MINIMAX_API_KEY")
 # Confirmed working endpoint (2026-06-13): https://api.minimax.io/v1/chat/completions
 MINIMAX_API_URL = "https://api.minimax.io/v1/chat/completions"
 
