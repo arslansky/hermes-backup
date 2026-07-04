@@ -1,52 +1,54 @@
-# GitHub Backup — Hermes Agent + OpenClaw
+# 🗂️ Hermes-Backup Repository
 
-| VM | Hostname | IP | Agent | Role |
-|---|---|---|---|---|
-| **Zeabur-01** | VM-17-222-ubuntu | 43.156.247.30 | OpenClaw | Telegram, WhatsApp, Main |
-| **Oracle-01** | instance-20260703-2144 | 129.80.234.56 | Hermes + OpenClaw | Discord, LLM, Backup |
+Shared configuration, scripts, skills, and setup guides for the multi-VM Hermes + OpenClaw infrastructure.
 
-## Structure
+## Repository Structure
 
 ```
-/
-├── scripts/           ← Shared scripts (symlinked on each VM)
+hermes-backup/
+├── README.md                              ← This file
+├── inventory.yml                          ← All VM inventory (3 VMs)
+├── scripts/                               ← Shared executable scripts (symlinked on each VM)
 │   ├── mingpao_scraper.py
-│   ├── run_mingpao_daily.sh
-│   ├── hermes_overview.py
+│   ├── tg_bot_zeabur01.py
 │   ├── article_analyzer.py
-│   ├── news_digest.py
-│   ├── tg_bot_zeabur01*.py
-│   ├── fable_reasoner.py
-│   └── ... (29 files)
-├── skills/            ← Shared skills documentation
+│   └── ...
+├── skills/                                ← Shared skills and knowledge files
 │   ├── README.md
 │   └── multi-vm-setup.md
-├── cron-output/       ← Historical cron job outputs
-└── README.md          ← This file
+├── setup-guide/                           ← Setup and onboarding documentation
+│   └── HERMES-OPENCLAW-MULTI-VM-SETUP.md
+└── archive/                               ← Old backups and historical files
+    └── README.md
 ```
 
-## How Scripts Sync Works
+## VM Inventory
 
-Two agents (Hermes + OpenClaw) on two VMs share the same scripts via GitHub:
+| VM | Host | User | Port | Auth | Primary Role | Scripts Directory |
+|---|---|---|---|---|---|---|
+| **Oracle-01** | 161.118.247.199 | opc | 22 | `~/.ssh/zeabur_key` | Hermes + OpenClaw | `/home/opc/hermes-backup/scripts/` |
+| **Zeabur-01** | 43.156.247.30 | ubuntu | 22 | Password | OpenClaw main | `/home/ubuntu/hermes-backup/scripts/` |
+| **ZO-01** | ts8.zocomputer.io | root | 10661 | `~/.ssh/zeabur_key` | Zo Computer VM | `/root/hermes-backup/scripts/` |
 
+## Quick Start
+
+On a new VM:
+```bash
+# Clone the repo into ~/hermes-backup (NOT ~/scripts)
+cd /home/opc   # or /home/ubuntu or /root
+git clone https://github.com/arslansky/hermes-backup.git
+
+# Symlink scripts to the agent's expected location
+ln -s /home/opc/hermes-backup/scripts ~/.openclaw/workspace/ops/scripts
+# For Hermes:
+ln -s /home/opc/hermes-backup/scripts ~/.hermes/scripts
 ```
-GitHub (arslansky/hermes-backup)
-    │ git push / git pull
-    ├── Oracle-01  →  /home/opc/scripts/     (git repo, symlinked to Hermes & OpenClaw)
-    └── Zeabur-01  →  /home/ubuntu/scripts/  (git repo, symlinked to OpenClaw)
-```
 
-Each VM has a daily cron job at 09:00 UTC that runs `git pull` to stay in sync.
+## Important Notes
+- **Active scripts live in `scripts/`**. Do not leave executable scripts at the repository root.
+- **Secrets are NOT stored in this repository.** Each VM maintains its own `.env` file.
+- **Old backups go in `archive/`**. See `archive/README.md`.
 
-## Secrets
+---
 
-- `.env` files (API keys, tokens) are **NOT** in this repo
-- Each VM maintains its own `.env` locally
-- This repo only has `.env.example` templates (to be added)
-
-## Auto-Update Cron
-
-| VM | Schedule | Method |
-|---|---|---|
-| Oracle-01 | 09:00 UTC daily | Hermes cron (no_agent) |
-| Zeabur-01 | 09:00 UTC daily | system crontab |
+_Generated: 2026-07-05 | Maintained by: arslansky_

@@ -1,0 +1,13 @@
+# Secrets
+.env
+*.env
+
+# Archives and dumps
+*.db
+*.db.gz
+*.tar.gz
+*.zip
+
+# OS files
+.DS_Store
+Thumbs.db

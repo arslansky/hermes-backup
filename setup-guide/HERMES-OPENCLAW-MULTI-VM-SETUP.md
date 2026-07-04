@@ -287,3 +287,16 @@ ls -la ~/.openclaw/workspace/ops/scripts/
 ---
 
 _Generated: 2026-07-04 | Repo: github.com/arslansky/hermes-backup_
+## Migration Note: Repository Restructure (2026-07-05)
+
+As of 2026-07-05, this repository was restructured:
+
+- **Before:** All scripts lived at the repository root.
+- **After:** All scripts live in the `scripts/` subdirectory.
+- **On each VM:** The local clone directory is now `~/hermes-backup/` (not `~/scripts/`).
+
+Symlinks should point to the `scripts/` subdirectory, e.g.:
+```bash
+ln -s /home/opc/hermes-backup/scripts ~/.openclaw/workspace/ops/scripts
+ln -s /home/opc/hermes-backup/scripts ~/.hermes/scripts
+```
