@@ -96,14 +96,14 @@ fi
 
 git add -A
 
-git commit -m "config: $DESCRIPTION for $HOSTNAME ($TIMESTAMP)"
+git commit -m "config: $DESCRIPTION for $HOSTNAME ($TIMESTAMP)" > /dev/null 2>&1
 
 GITHUB_TOKEN=$(grep '^GITHUB_TOKEN=' "$HOME/.hermes/.env" 2>/dev/null | cut -d= -f2-)
 if [ -n "$GITHUB_TOKEN" ]; then
-    git remote set-url origin "https://${GITHUB_TOKEN}@github.com/arslansky/hermes-backup.git"
+    git remote set-url origin "https://${GITHUB_TOKEN}@github.com/arslansky/hermes-backup.git" > /dev/null 2>&1
 fi
 
-git push origin main
+git push origin main > /dev/null 2>&1
 
 echo ""
 echo "=== Config Backup Complete ==="

@@ -1,26 +1,22 @@
-# inventory.yml — VM 清單
-# 定義所有 VM 角色、SSH 連接資料
-
 vms:
   zeabur-01:
     hostname: VM-17-222-ubuntu
     ssh_host: 43.156.247.30
     ssh_user: ubuntu
     ssh_port: 22
-    ssh_password: true  # password auth (no key)
+    ssh_password: true
     roles:
       - openclaw-main
       - telegram
       - whatsapp
       - primary
     description: Main OpenClaw agent, Telegram + WhatsApp control
-    scripts_dir: /home/ubuntu/scripts
+    scripts_dir: /home/ubuntu/hermes-backup
     backup_priority: 1
 
   oracle-01:
     hostname: instance-20260703-2144
-    ssh_host: 161.118.247.199    # public IP (primaryIp)
-    # ssh_host_private: 129.80.234.56  # OCI primary private IP — NAT behind public
+    ssh_host: 161.118.247.199
     ssh_user: opc
     ssh_port: 22
     roles:
@@ -30,22 +26,22 @@ vms:
       - llm-gateway
       - backup
     description: Hermes Gateway, OpenClaw, Discord bot, LLM endpoint
-    scripts_dir: /home/opc/scripts
+    scripts_dir: /home/opc/hermes-backup
     backup_priority: 2
 
   zo-01:
     hostname: modal
-    ssh_host: ts8.zocomputer.io         # resolves to 150.136.143.138
+    ssh_host: ts8.zocomputer.io
     ssh_user: root
     ssh_port: 10661
-    ssh_key: zeabur_key                 # ~/.ssh/zeabur_key
+    ssh_key: zeabur_key
     roles:
       - zo-vm
     description: Zo Computer VM (managed service, gvisor kernel)
-    scripts_dir: /root/scripts
+    scripts_dir: /root/hermes-backup
     backup_priority: 3
 
-# Roles 說明：
+# Roles
 #   openclaw-main  — OpenClaw 主 agent
 #   hermes         — Hermes Gateway
 #   telegram       — Telegram bot
@@ -56,14 +52,14 @@ vms:
 #   primary        — 主要 VM（最高 backup 優先級）
 #   zo-vm          — Zo Computer VM
 
-# SSH 連接：
+# SSH 連接
 #   Oracle → Zeabur: sshpass -p '<password>' ssh ubuntu@43.156.247.30
 #   Oracle → ZO: ssh -p 10661 -i ~/.ssh/zeabur_key root@ts8.zocomputer.io
 #   Zeabur → Oracle: ssh -i ~/.ssh/zeabur_key opc@161.118.247.199
 #   Zeabur → ZO: ssh -p 10661 -i ~/.ssh/zeabur_key root@ts8.zocomputer.io
 #   兩邊 → GitHub: HTTPS with GITHUB_TOKEN
 
-# 共享 scripts：
+# 共享 scripts
 #   GitHub: https://github.com/arslansky/hermes-backup
 #   本地: 各 VM 嘅 scripts_dir
 #   Auto-sync: 每日 09:00 UTC git pull
