@@ -4,23 +4,34 @@ Complete guide for setting up a new VM with Hermes Agent and/or OpenClaw, connec
 
 ## Overview
 
-Two agents, two VMs, one shared scripts directory via GitHub:
+Three VMs, two agents, one shared scripts directory via GitHub:
 
 ```
 GitHub (arslansky/hermes-backup)  ← Single source of truth
     │
     ├── Oracle-01 (Hermes + OpenClaw)
+    │   Host: 161.118.247.199
+    │   User: opc
     │   /home/opc/scripts/  → git repo
     │   Symlinks → ~/.hermes/scripts/ + ~/.openclaw/workspace/ops/scripts/
     │
-    └── Zeabur-01 (OpenClaw only)
-        /home/ubuntu/scripts/  → git repo
-        Symlinks → ~/.openclaw/workspace/ops/scripts/
+    ├── Zeabur-01 (OpenClaw main)
+    │   Host: 43.156.247.30
+    │   User: ubuntu
+    │   /home/ubuntu/scripts/  → git repo
+    │   Symlinks → ~/.openclaw/workspace/ops/scripts/
+    │
+    └── ZO-01 (Zo Computer VM)
+        Host: ts8.zocomputer.io:10661
+        User: root
+        OS: gvisor kernel
+        SSH key: ~/.ssh/zeabur_key
 ```
 
 Prerequisites:
 - GitHub token with repo scope (stored as `GITHUB_TOKEN` in `.env`)
 - SSH password for Zeabur VM (if connecting cross-VM)
+- SSH key `~/.ssh/zeabur_key` for Oracle and ZO access
 - Git installed on all VMs
 
 ---
@@ -190,7 +201,19 @@ git clone https://github.com/arslansky/hermes-backup.git /home/opc/scripts
 
 ---
 
-## 7. File Inventory
+## 7. VM Inventory
+
+| VM | Host | User | Port | Auth | Primary Role | Scripts Dir |
+|---|---|---|---|---|---|---|
+| **Oracle-01** | `161.118.247.199` | opc | 22 | `~/.ssh/zeabur_key` | Hermes + OpenClaw | `/home/opc/scripts/` |
+| **Zeabur-01** | `43.156.247.30` | ubuntu | 22 | Password | OpenClaw main | `/home/ubuntu/scripts/` |
+| **ZO-01** | `ts8.zocomputer.io` | root | 10661 | `~/.ssh/zeabur_key` | Zo Computer VM | `/root/scripts/` |
+
+**Note:** Old Oracle IP `129.80.234.56` is deprecated. Use `161.118.247.199`.
+
+---
+
+## 8. File Inventory
 
 ### Scripts (29 files in `/home/opc/scripts/`)
 
@@ -230,7 +253,6 @@ git clone https://github.com/arslansky/hermes-backup.git /home/opc/scripts
 | Hermes Gateway | Oracle-01 | systemd user service |
 | OpenClaw Gateway | Oracle-01 | systemd user service |
 | OpenClaw Gateway | Zeabur-01 | systemd user service |
-| OpenClaw Watchdog | Oracle-01 | systemd user service |
 
 ### Cron Jobs
 
