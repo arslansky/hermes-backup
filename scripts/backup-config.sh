@@ -81,10 +81,33 @@ write_metadata() {
 EOF
 }
 
+# --- Update ~/.secure/.env snapshot (local only) ---
+update_secure_snapshot() {
+    echo "[extra] Updating ~/.secure/.env snapshot..."
+    mkdir -p "$HOME/.secure"
+    [ -f "$HOME/.hermes/.env" ] && cp -f "$HOME/.hermes/.env" "$HOME/.secure/.env"
+
+    # Regenerate manifest
+    if command -v sha256sum >/dev/null 2>&1; then
+        cat > "$HOME/.secure/manifest.json" << MANIFEST
+{
+  "version": "1.0",
+  "created_at": "$(date -Iseconds)",
+  "hostname": "$HOSTNAME",
+  "files": {
+    ".env": "$(sha256sum "$HOME/.secure/.env" | awk '{print $1}')"
+  }
+}
+MANIFEST
+    fi
+    echo "  ✓ ~/.secure/.env snapshot updated"
+}
+
 backup_hermes
 backup_openclaw
 backup_systemd
 write_metadata
+update_secure_snapshot
 
 # --- Git commit and push ---
 cd "$REPO_DIR"
