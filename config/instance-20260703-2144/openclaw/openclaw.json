@@ -1,0 +1,60 @@
+{
+  "gateway": {
+    "mode": "local",
+    "auth": {
+      "mode": "token",
+      "token": "e1cf5363fe86e33eff8a3ab8b82a10d94f207acf0d177b4986b4e9b82e6c51756437c15a503257a79c0e0235d4d93eae"
+    }
+  },
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "minimax/MiniMax-M2.7"
+      },
+      "workspace": "/home/opc/.openclaw/workspace"
+    }
+  },
+  "channels": {
+    "telegram": {
+      "enabled": true,
+      "botToken": "8755148273:AAEM7NYxmS1SSrSKSQy5XZfIVFOjiDkfx_s"
+    }
+  },
+  "commands": {
+    "ownerAllowFrom": [
+      "telegram:160408068"
+    ]
+  },
+  "meta": {
+    "lastTouchedVersion": "2026.6.11",
+    "lastTouchedAt": "2026-07-04T08:08:30.497Z"
+  },
+  "models": {
+    "providers": {
+      "minimax": {
+        "baseUrl": "https://api.minimax.io/anthropic",
+        "apiKey": "sk-cp-mNrtVk6Q3mzC5p84B5wd6JyW4t6JnOJYaJGMfagw1ogF1gsSwrQoEVla8-ufgFVc",
+        "api": "anthropic-messages",
+        "models": [
+          {
+            "id": "MiniMax-M2.7",
+            "name": "MiniMax M2.7",
+            "contextWindow": 1000000,
+            "maxTokens": 128000
+          }
+        ]
+      }
+    }
+  },
+  "auth": {
+    "profiles": {
+      "minimax:manual": {
+        "provider": "minimax",
+        "mode": "api_key"
+      }
+    }
+  },
+  "session": {
+    "dmScope": "per-channel-peer"
+  }
+}

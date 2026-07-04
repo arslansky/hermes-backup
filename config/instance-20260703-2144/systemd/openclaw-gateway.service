@@ -1,0 +1,16 @@
+[Unit]
+Description=OpenClaw Gateway (v2026.6.11)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+ExecStart=/home/opc/.local/bin/openclaw gateway --port 18789
+Restart=always
+RestartSec=5
+Environment=HOME=/home/opc
+Environment=PATH=/home/opc/.local/bin:/home/opc/.nvm/versions/node/v22.23.1/bin:/usr/local/bin:/usr/bin:/bin
+Environment=MINIMAX_API_KEY=sk-cp-mNrtisBo685K4E_h9tViioU44JVLDP89yIhrVXnSqJUOH8pCoK0DdMV2qN0JhIpqhH9RU84B5wd6JyW4t6JnOJYaJGMfagw1ogF1gsSwrQoEVla8-ufgFVc
+Environment=TELEGRAM_BOT_TOKEN=8755148273:AAEM7NYxmS1SSrSKSQy5XZfIVFOjiDkfx_s
+
+[Install]
+WantedBy=default.target
