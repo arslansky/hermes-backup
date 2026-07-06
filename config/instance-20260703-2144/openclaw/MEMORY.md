@@ -25,3 +25,22 @@
 - Arslan (@Arslansky), Telegram ID: 160408068
 - Speaks Cantonese
 - Running OpenClaw on Oracle Cloud ARM64 free tier
+
+## Zeabur VM Credentials
+
+- **Host:** 43.156.247.30
+- **User:** ubuntu
+- **Password:** `@Q2%YTCbe%)mvSGQ42`
+- **SSH:** `sshpass -p '@Q2%YTCbe%)mvSGQ42' ssh ubuntu@43.156.247.30`
+- **K3s:** `sudo kubectl` for pod management
+- **Note:** OpenClaw runs as user-level systemd service (`systemctl --user`)
+
+
+## Zeabur VM — 登入資料（必讀！）
+
+- SSH: `sshpass -p '@Q2%YTCbe%)mvSGQ42' ssh ubuntu@43.156.247.30`
+- User: `ubuntu`
+- Password: `@Q2%YTCbe%)mvSGQ42`
+- 用途: 主 OpenClaw、Telegram、WhatsApp
+
+⚠️ 所有 VM 登入資料已在此文檔上記錄，請在提問前先查閱本文檔。
