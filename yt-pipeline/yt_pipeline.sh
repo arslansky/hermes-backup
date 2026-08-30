@@ -20,20 +20,23 @@
 # ============================================================================
 set -euo pipefail
 
+# Ensure PATH for non-login shells (Hermes / OpenClaw tools run bare /bin/sh)
+export PATH="$HOME/.local/bin:$PATH"
+
 # --- Global lock + resource guards ---
 LOCK_FILE="/var/lock/yt-pipeline.lock"
 exec 200>"$LOCK_FILE" || { echo "❌ Cannot open lock file $LOCK_FILE"; exit 1; }
 flock -n 200 || { echo "❌ Another yt_pipeline instance is running"; exit 1; }
 
 # Memory guard: require at least 1.5 GB available
-AVAILABLE_MB=$(free -m | awk '''/^Mem:/ {print $7}'''')
+AVAILABLE_MB=$(free -m | awk '/^Mem:/ {print $7}')
 if [[ -n "$AVAILABLE_MB" && "$AVAILABLE_MB" -lt 1500 ]]; then
     echo "❌ Available memory too low: ${AVAILABLE_MB}MB (need >= 1500MB)"
     exit 1
 fi
 
 # Disk guard: require at least 2 GB free on /tmp
-TMP_FREE_MB=$(df -m /tmp 2>/dev/null | awk '''NR==2 {print $4}'''')
+TMP_FREE_MB=$(df -m /tmp 2>/dev/null | awk 'NR==2 {print $4}')
 if [[ -n "$TMP_FREE_MB" && "$TMP_FREE_MB" -lt 2048 ]]; then
     echo "❌ /tmp free space too low: ${TMP_FREE_MB}MB (need >= 2048MB)"
     exit 1
@@ -51,6 +54,8 @@ fi
 
 PROXY_SOCKS5="${SOCKS5_PROXY:-}"
 PROXY_HTTP="${HTTP_PROXY:-}"
+# yt-dlp works reliably through the HTTP proxy on this host
+YTDLP_PROXY="${YTDLP_PROXY:-${PROXY_HTTP:-$PROXY_SOCKS5}}"
 WORKSPACE_DIR="$HOME/scripts/yt-pipeline"
 MEMORY_ROOT="$HOME/.openclaw/workspace/ds-agent/memory"
 CENTRAL_INDEX="$MEMORY_ROOT/yt-transcripts/CENTRAL_INDEX.md"
@@ -62,7 +67,7 @@ CHUNK_MINUTES=12         # 每段 ~12 分鐘，55min 片 ≈ 5 段
 LOG_DIR="$HOME/.openclaw/workspace/memory/ops"
 LOG_FILE="$LOG_DIR/yt-pipeline.log"
 mkdir -p "$LOG_DIR"
-RUN_ID="${VIDEO_ID:-unknown}-$$"
+RUN_ID="pending-$$"
 log_run() { echo "[$(date +'%Y-%m-%d %H:%M:%S')] $*" >> "$LOG_FILE"; }
 
 # --- Cookies auto-detect ---
@@ -130,17 +135,16 @@ mkdir -p "$OUTPUT_DIR/raw"
 log "🔍 Checking video $VIDEO_ID..."
 
 if [[ -z "$TITLE" ]]; then
-    TITLE=$(yt-dlp "${YTDLP_COOKIE_ARGS[@]}" --proxy "$PROXY_SOCKS5" --print title "https://youtu.be/$VIDEO_ID" 2>/dev/null || echo "Unknown")
+    TITLE=$(yt-dlp "${YTDLP_COOKIE_ARGS[@]}" --proxy "$YTDLP_PROXY" --print title "https://youtu.be/$VIDEO_ID" 2>/dev/null || echo "Unknown")
 fi
 log "📺 Title: $TITLE"
 
-DURATION=$(yt-dlp "${YTDLP_COOKIE_ARGS[@]}" --proxy "$PROXY_SOCKS5" --print duration_string "https://youtu.be/$VIDEO_ID" 2>/dev/null || echo "?")
+DURATION=$(yt-dlp "${YTDLP_COOKIE_ARGS[@]}" --proxy "$YTDLP_PROXY" --print duration_string "https://youtu.be/$VIDEO_ID" 2>/dev/null || echo "?")
 log "⏱️ Duration: $DURATION"
 
 # ============================================================================
-# Step 2: ① 直接試 auto-subs（唔再信 --list-subs）
+# Step 2: Try manual subtitles first, then auto-subs, then Whisper
 # ============================================================================
-log "📥 Trying yt-dlp auto-subs download..."
 
 # 候選語言優先序：指定 lang > 常見中英
 if [[ -n "$LANG" ]]; then
@@ -149,16 +153,40 @@ else
     SUB_LANGS="zh-Hant,zh-Hans,zh,en,en-US,en-GB"
 fi
 
-yt-dlp "${YTDLP_COOKIE_ARGS[@]}" --proxy "$PROXY_SOCKS5" \
-    --write-auto-subs --write-subs --sub-langs "$SUB_LANGS" \
-    --skip-download --convert-subs srt \
-    -o "$TMPDIR/$VIDEO_ID.%(ext)s" \
-    "https://youtu.be/$VIDEO_ID" >/dev/null 2>&1 || true
-
-RAW_FILE=$(find "$TMPDIR" -name "${VIDEO_ID}*.srt" -o -name "${VIDEO_ID}*.vtt" 2>/dev/null | head -1)
-
 SUBS_AVAILABLE=false
 SUBS_LANG=""
+RAW_FILE=""
+
+# --- Attempt 1: manual (uploaded) subtitles ---
+log "📥 Trying yt-dlp manual subs..."
+yt-dlp "${YTDLP_COOKIE_ARGS[@]}" --proxy "$YTDLP_PROXY" \
+    --write-subs --sub-langs "$SUB_LANGS" \
+    --skip-download --convert-subs srt \
+    -o "$TMPDIR/man_$VIDEO_ID.%(ext)s" \
+    "https://youtu.be/$VIDEO_ID" 2>&1 | tail -20 | tee -a "$LOG_FILE" >/dev/null || true
+
+RAW_FILE=$(find "$TMPDIR" -maxdepth 1 -name "man_${VIDEO_ID}*.srt" 2>/dev/null | head -1)
+if [[ -n "$RAW_FILE" && -f "$RAW_FILE" ]]; then
+    SUBS_AVAILABLE=true
+    log "✅ Manual subs found"
+fi
+
+# --- Attempt 2: auto-generated subtitles ---
+if [[ "$SUBS_AVAILABLE" != true ]]; then
+    log "📥 Trying yt-dlp auto-subs..."
+    yt-dlp "${YTDLP_COOKIE_ARGS[@]}" --proxy "$YTDLP_PROXY" \
+        --write-auto-subs --sub-langs "$SUB_LANGS" \
+        --skip-download --convert-subs srt \
+        -o "$TMPDIR/auto_$VIDEO_ID.%(ext)s" \
+        "https://youtu.be/$VIDEO_ID" 2>&1 | tail -20 | tee -a "$LOG_FILE" >/dev/null || true
+
+    RAW_FILE=$(find "$TMPDIR" -maxdepth 1 -name "auto_${VIDEO_ID}*.srt" 2>/dev/null | head -1)
+    if [[ -n "$RAW_FILE" && -f "$RAW_FILE" ]]; then
+        SUBS_AVAILABLE=true
+        log "✅ Auto-subs found"
+    fi
+fi
+
 if [[ -n "$RAW_FILE" && -f "$RAW_FILE" ]]; then
     SUBS_AVAILABLE=true
     # 由檔名偵測語言
@@ -171,7 +199,7 @@ if [[ -n "$RAW_FILE" && -f "$RAW_FILE" ]]; then
     elif [[ "$RAW_FILE" == *.zh.* ]]; then
         SUBS_LANG="zh"
     else
-        SUBS_LANG="auto"
+        SUBS_LANG="${LANG:-auto}"
     fi
 fi
 
@@ -190,10 +218,10 @@ else
 
     # 下載音頻（④ videoID 命名）
     log "⬇️ Downloading audio..."
-    yt-dlp "${YTDLP_COOKIE_ARGS[@]}" --proxy "$PROXY_SOCKS5" \
+    yt-dlp "${YTDLP_COOKIE_ARGS[@]}" --proxy "$YTDLP_PROXY" \
         -f "bestaudio[ext=m4a]" \
         -o "$TMPDIR/$VIDEO_ID.m4a" \
-        "https://youtu.be/$VIDEO_ID" >/dev/null 2>&1
+        "https://youtu.be/$VIDEO_ID" 2>&1 | tail -20 | tee -a "$LOG_FILE" >/dev/null
 
     # 轉 16k wav
     log "🔊 Converting to 16k wav..."
