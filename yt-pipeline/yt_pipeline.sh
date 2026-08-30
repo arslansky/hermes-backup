@@ -147,30 +147,28 @@ timestamp=$ts
 EOF
 }
 
-# B) Telegram push（用現有 tg-send-doc.sh / curl Bot API）
+# B) Telegram push（sendMessage 文字通知）
+# 預設只通知失敗；設定 YT_NOTIFY_SUCCESS=1 才通知成功
 notify_telegram() {
     local status="$1"
     local chat_id="${TG_CHAT_ID:-160408068}"
-    local msg=""
-    if [[ "$status" == done ]]; then
-        msg="✅ YT pipeline 完成：$TITLE ($DURATION)\nPath: $PIPELINE_PATH"
-    else
-        msg="❌ YT pipeline 失敗：$TITLE\nCheck: $LOG_FILE"
-    fi
-    # 用 script（如果存在），否則 curl 直打 Bot API
-    local send_script="$HOME/.openclaw/scripts/tg-send-doc.sh"
     local token_file="$HOME/.openclaw/credentials/telegram-know2learn-token.txt"
-    if [[ -x "$send_script" ]]; then
-        # 發文字通知：借用 send 一個小文字檔
-        local tmpmsg=$(mktemp)
-        echo -e "$msg" > "$tmpmsg"
-        "$send_script" "$tmpmsg" "yt-pipeline $status: $TITLE" "$chat_id" >/dev/null 2>&1
-        rm -f "$tmpmsg"
-    elif [[ -f "$token_file" ]]; then
-        local token=$(cat "$token_file")
-        curl -s -X POST "https://api.telegram.org/bot${token}/sendMessage" \
-            -d chat_id="$chat_id" -d text="$(echo -e "$msg")" >/dev/null 2>&1
+    [[ -f "$token_file" ]] || { echo "⚠️ no telegram token, skip notify"; return 0; }
+    if [[ "$status" == done && "${YT_NOTIFY_SUCCESS:-0}" != "1" ]]; then
+        log "Telegram success notification suppressed (set YT_NOTIFY_SUCCESS=1 to enable)"
+        return 0
     fi
+    local token
+    token=$(cat "$token_file")
+    local msg
+    if [[ "$status" == done ]]; then
+        msg="✅ YT pipeline 完成\n片：$TITLE\n時長：$DURATION\n路徑：$PIPELINE_PATH"
+    else
+        msg="❌ YT pipeline 失敗\n片：$TITLE\nLog：$LOG_FILE"
+    fi
+    curl -s -X POST "https://api.telegram.org/bot${token}/sendMessage" \
+        -d chat_id="$chat_id" \
+        --data-urlencode "text=$msg" >/dev/null 2>&1 || true
 }
 
 if [[ -n "$COOKIES_FILE" && -f "$COOKIES_FILE" ]]; then
