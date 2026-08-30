@@ -231,7 +231,7 @@ else
     # 簡單啟發：中文片語系偵測太貴，直接用 whisper 首 30 秒 auto-detect
     log "🌐 Detecting language (30s sample)..."
     ffmpeg -y -i "$TMPDIR/$VIDEO_ID.wav" -t 30 -c copy "$TMPDIR/sample.wav" >/dev/null 2>&1
-    DETECTED_LANG=$(whisper "$TMPDIR/sample.wav" --model tiny --language auto --task transcribe --output_format txt --output_dir "$TMPDIR/detect" 2>&1 | grep -oP "Detected language: \K\w+" || echo "zh")
+    DETECTED_LANG=$(python3 "$WORKSPACE_DIR/whisper_cpp_wrapper.py" "$TMPDIR/sample.wav" --model "$MODEL" --language auto --task transcribe --output_format txt --output_dir "$TMPDIR/detect" 2>&1 | grep -oP "Detected language: \K\w+" || echo "zh")
     if [[ -z "$DETECTED_LANG" ]]; then DETECTED_LANG="zh"; fi
     log "   Detected language: $DETECTED_LANG"
 
@@ -256,9 +256,10 @@ else
     pids=()
     for i in $(seq 0 $((NUM_CHUNKS - 1))); do
         (
-            whisper "$TMPDIR/chunks/seg_$i.wav" \
+            python3 "$WORKSPACE_DIR/whisper_cpp_wrapper.py" "$TMPDIR/chunks/seg_$i.wav" \
                 --model "$MODEL" \
                 --language "$DETECTED_LANG" \
+                --task transcribe \
                 --output_format srt \
                 --output_dir "$TMPDIR/chunks" \
                 >/dev/null 2>&1
