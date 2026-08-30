@@ -16,17 +16,30 @@
 # Usage:
 #   ./yt_pipeline.sh --video-id <YT_ID> [--lang <lang>] [--model <tiny|base>]
 #                   [--title <title>] [--output-dir <dir>] [--cookies <file>]
-#                   [--no-summary] [--quiet]
+#                   [--no-summary] [--quiet] [--force-whisper]
 # ============================================================================
 set -euo pipefail
+
+# --- Overall 45-minute hard timeout wrapper ---
+# Re-exec inside timeout so the entire pipeline (including stuck Whisper) is killed after 45 min.
+if [[ -z "${YT_PIPELINE_TIMEOUT_WRAPPED:-}" ]]; then
+    export YT_PIPELINE_TIMEOUT_WRAPPED=1
+    exec timeout --signal=TERM 2700 bash "$0" "$@"
+fi
 
 # Ensure PATH for non-login shells (Hermes / OpenClaw tools run bare /bin/sh)
 export PATH="$HOME/.local/bin:$PATH"
 
 # --- Global lock + resource guards ---
+# 排隊佇列：flock 阻塞等待（唔再用 -n 直接 fail），
+# 令連續丟多條片時自動排隊，唔會「第二條消失」。
 LOCK_FILE="/var/lock/yt-pipeline.lock"
 exec 200>"$LOCK_FILE" || { echo "❌ Cannot open lock file $LOCK_FILE"; exit 1; }
-flock -n 200 || { echo "❌ Another yt_pipeline instance is running"; exit 1; }
+if ! flock -n 200; then
+    echo "⏳ 另一條 pipeline 正在跑，排隊等待..."
+    flock 200
+    echo "🔓 排到隊，開始處理"
+fi
 
 # Memory guard: require at least 1.5 GB available
 AVAILABLE_MB=$(free -m | awk '/^Mem:/ {print $7}')
@@ -61,7 +74,7 @@ MEMORY_ROOT="$HOME/.openclaw/workspace/ds-agent/memory"
 CENTRAL_INDEX="$MEMORY_ROOT/yt-transcripts/CENTRAL_INDEX.md"
 DEFAULT_COOKIES="$WORKSPACE_DIR/cookies.txt"
 PARALLEL_JOBS=1          # 保守：同時只跑 1 個 Whisper 防止 OOM
-CHUNK_MINUTES=12         # 每段 ~12 分鐘，55min 片 ≈ 5 段
+CHUNK_MINUTES=5         # 每段 ~5 分鐘
 
 # --- Logging ---
 LOG_DIR="$HOME/.openclaw/workspace/memory/ops"
@@ -81,11 +94,12 @@ fi
 # --- Parse args ---
 VIDEO_ID=""
 LANG=""
-MODEL="base"
+MODEL="${MODEL:-tiny}"
 TITLE=""
 OUTPUT_DIR=""
 NO_SUMMARY=false
 QUIET=false
+FORCE_WHISPER=false
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -97,6 +111,7 @@ while [[ $# -gt 0 ]]; do
         --cookies)  COOKIES_FILE="$2"; YTDLP_COOKIE_ARGS=(--js-runtimes node --cookies "$2"); shift 2 ;;
         --no-summary) NO_SUMMARY=true; shift ;;
         --quiet)    QUIET=true; shift ;;
+        --force-whisper) FORCE_WHISPER=true; shift ;;
         --help|-h)  sed -n '/^# Usage:/,/^$/p' "$0"; exit 0 ;;
         *)          echo "❌ Unknown option: $1"; exit 1 ;;
     esac
@@ -107,10 +122,55 @@ if [[ -z "$VIDEO_ID" ]]; then
     exit 1
 fi
 
+
 log() {
     local msg="[$(date +%H:%M:%S)] $*"
     [[ "$QUIET" != true ]] && echo "$msg"
     log_run "$msg"
+}
+
+# --- 完成通知（A: sentinel 文件 + B: Telegram push）---
+# A) sentinel：寫一個 done 檔，方便 agent / 其他進程 poll 偵測完成
+notify_sentinel() {
+    local status="$1"  # done | failed
+    local dir="${DONE_DIR:-/tmp/yt-pipeline-status}"
+    mkdir -p "$dir"
+    local ts=$(date +'%Y-%m-%d %H:%M:%S')
+    cat > "$dir/$VIDEO_ID.status" <<EOF
+video_id=$VIDEO_ID
+status=$status
+title=$TITLE
+duration=$DURATION
+path=$PIPELINE_PATH
+output=$OUTPUT_DIR
+timestamp=$ts
+EOF
+}
+
+# B) Telegram push（用現有 tg-send-doc.sh / curl Bot API）
+notify_telegram() {
+    local status="$1"
+    local chat_id="${TG_CHAT_ID:-160408068}"
+    local msg=""
+    if [[ "$status" == done ]]; then
+        msg="✅ YT pipeline 完成：$TITLE ($DURATION)\nPath: $PIPELINE_PATH"
+    else
+        msg="❌ YT pipeline 失敗：$TITLE\nCheck: $LOG_FILE"
+    fi
+    # 用 script（如果存在），否則 curl 直打 Bot API
+    local send_script="$HOME/.openclaw/scripts/tg-send-doc.sh"
+    local token_file="$HOME/.openclaw/credentials/telegram-know2learn-token.txt"
+    if [[ -x "$send_script" ]]; then
+        # 發文字通知：借用 send 一個小文字檔
+        local tmpmsg=$(mktemp)
+        echo -e "$msg" > "$tmpmsg"
+        "$send_script" "$tmpmsg" "yt-pipeline $status: $TITLE" "$chat_id" >/dev/null 2>&1
+        rm -f "$tmpmsg"
+    elif [[ -f "$token_file" ]]; then
+        local token=$(cat "$token_file")
+        curl -s -X POST "https://api.telegram.org/bot${token}/sendMessage" \
+            -d chat_id="$chat_id" -d text="$(echo -e "$msg")" >/dev/null 2>&1
+    fi
 }
 
 if [[ -n "$COOKIES_FILE" && -f "$COOKIES_FILE" ]]; then
@@ -158,32 +218,34 @@ SUBS_LANG=""
 RAW_FILE=""
 
 # --- Attempt 1: manual (uploaded) subtitles ---
-log "📥 Trying yt-dlp manual subs..."
-yt-dlp "${YTDLP_COOKIE_ARGS[@]}" --proxy "$YTDLP_PROXY" \
-    --write-subs --sub-langs "$SUB_LANGS" \
-    --skip-download --convert-subs srt \
-    -o "$TMPDIR/man_$VIDEO_ID.%(ext)s" \
-    "https://youtu.be/$VIDEO_ID" 2>&1 | tail -20 | tee -a "$LOG_FILE" >/dev/null || true
-
-RAW_FILE=$(find "$TMPDIR" -maxdepth 1 -name "man_${VIDEO_ID}*.srt" 2>/dev/null | head -1)
-if [[ -n "$RAW_FILE" && -f "$RAW_FILE" ]]; then
-    SUBS_AVAILABLE=true
-    log "✅ Manual subs found"
-fi
-
-# --- Attempt 2: auto-generated subtitles ---
-if [[ "$SUBS_AVAILABLE" != true ]]; then
-    log "📥 Trying yt-dlp auto-subs..."
+if [[ "$FORCE_WHISPER" != true ]]; then
+    log "📥 Trying yt-dlp manual subs..."
     yt-dlp "${YTDLP_COOKIE_ARGS[@]}" --proxy "$YTDLP_PROXY" \
-        --write-auto-subs --sub-langs "$SUB_LANGS" \
+        --write-subs --sub-langs "$SUB_LANGS" \
         --skip-download --convert-subs srt \
-        -o "$TMPDIR/auto_$VIDEO_ID.%(ext)s" \
+        -o "$TMPDIR/man_$VIDEO_ID.%(ext)s" \
         "https://youtu.be/$VIDEO_ID" 2>&1 | tail -20 | tee -a "$LOG_FILE" >/dev/null || true
 
-    RAW_FILE=$(find "$TMPDIR" -maxdepth 1 -name "auto_${VIDEO_ID}*.srt" 2>/dev/null | head -1)
+    RAW_FILE=$(find "$TMPDIR" -maxdepth 1 -name "man_${VIDEO_ID}*.srt" 2>/dev/null | head -1)
     if [[ -n "$RAW_FILE" && -f "$RAW_FILE" ]]; then
         SUBS_AVAILABLE=true
-        log "✅ Auto-subs found"
+        log "✅ Manual subs found"
+    fi
+
+    # --- Attempt 2: auto-generated subtitles ---
+    if [[ "$SUBS_AVAILABLE" != true ]]; then
+        log "📥 Trying yt-dlp auto-subs..."
+        yt-dlp "${YTDLP_COOKIE_ARGS[@]}" --proxy "$YTDLP_PROXY" \
+            --write-auto-subs --sub-langs "$SUB_LANGS" \
+            --skip-download --convert-subs srt \
+            -o "$TMPDIR/auto_$VIDEO_ID.%(ext)s" \
+            "https://youtu.be/$VIDEO_ID" 2>&1 | tail -20 | tee -a "$LOG_FILE" >/dev/null || true
+
+        RAW_FILE=$(find "$TMPDIR" -maxdepth 1 -name "auto_${VIDEO_ID}*.srt" 2>/dev/null | head -1)
+        if [[ -n "$RAW_FILE" && -f "$RAW_FILE" ]]; then
+            SUBS_AVAILABLE=true
+            log "✅ Auto-subs found"
+        fi
     fi
 fi
 
@@ -231,7 +293,8 @@ else
     # 簡單啟發：中文片語系偵測太貴，直接用 whisper 首 30 秒 auto-detect
     log "🌐 Detecting language (30s sample)..."
     ffmpeg -y -i "$TMPDIR/$VIDEO_ID.wav" -t 30 -c copy "$TMPDIR/sample.wav" >/dev/null 2>&1
-    DETECTED_LANG=$(python3 "$WORKSPACE_DIR/whisper_cpp_wrapper.py" "$TMPDIR/sample.wav" --model "$MODEL" --language auto --task transcribe --output_format txt --output_dir "$TMPDIR/detect" 2>&1 | grep -oP "Detected language: \K\w+" || echo "zh")
+    DETECTED_LANG=$(python3 "$WORKSPACE_DIR/whisper_cpp_wrapper.py" "$TMPDIR/sample.wav" --model "$MODEL" --language auto --task transcribe --output_format txt --output_dir "$TMPDIR/detect" 2>&1 | grep -oP "Detected language: \K\w+" | head -1 || echo "zh")
+    DETECTED_LANG=$(echo "$DETECTED_LANG" | tr -d '\n' | head -c 5)
     if [[ -z "$DETECTED_LANG" ]]; then DETECTED_LANG="zh"; fi
     log "   Detected language: $DETECTED_LANG"
 
@@ -252,17 +315,27 @@ else
     log "   Chunks split done."
 
     # 並行跑 whisper（PARALLEL_JOBS 個同時）
-    log "🎙️ Running parallel Whisper STT..."
+    log "🎙️ Running parallel Whisper STT ($NUM_CHUNKS chunks, ${CHUNK_MINUTES}min each, model=$MODEL)..."
     pids=()
     for i in $(seq 0 $((NUM_CHUNKS - 1))); do
         (
-            python3 "$WORKSPACE_DIR/whisper_cpp_wrapper.py" "$TMPDIR/chunks/seg_$i.wav" \
+            START_T=$(date +%s)
+            timeout 600 python3 "$WORKSPACE_DIR/whisper_cpp_wrapper.py" "$TMPDIR/chunks/seg_$i.wav" \
                 --model "$MODEL" \
                 --language "$DETECTED_LANG" \
                 --task transcribe \
                 --output_format srt \
-                --output_dir "$TMPDIR/chunks" \
+                --output_dir "$TMPDIR/subs" \
                 >/dev/null 2>&1
+            RC=$?
+            END_T=$(date +%s)
+            if [[ $RC -eq 124 ]]; then
+                log "   [WARN] Chunk $i timed out (>600s)"
+            elif [[ $RC -ne 0 ]]; then
+                log "   [WARN] Chunk $i failed (rc=$RC)"
+            else
+                log "   ✅ Chunk $i done in $((END_T - START_T))s"
+            fi
         ) &
         pids+=($!)
         # 限流：最多 PARALLEL_JOBS 個並行
@@ -279,7 +352,7 @@ else
     : > "$MERGED"
     SEG_IDX=1
     for i in $(seq 0 $((NUM_CHUNKS - 1))); do
-        SEG_SRT="$TMPDIR/chunks/seg_$i.srt"
+        SEG_SRT="$TMPDIR/subs/seg_$i.srt"
         [[ -f "$SEG_SRT" ]] || continue
         OFFSET=$((i * CHUNK_SEC))
         python3 - "$SEG_SRT" "$OFFSET" "$SEG_IDX" >> "$MERGED" << 'PYEOF'
