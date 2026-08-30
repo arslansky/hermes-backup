@@ -1,0 +1,15 @@
+# yt-pipeline local secrets
+.env
+cookies*.txt
+*.cookies
+
+# Runtime outputs / backups
+*.bak*
+*.bak.*
+__pycache__/
+*.pyc
+
+# Whisper / pipeline runtime dirs (video IDs look like base64-ish alphanumeric strings)
+/yt-pipeline/[A-Za-z0-9_-]{8,}/
+/yt-pipeline/transcript_*.txt
+/yt-pipeline/*.temp.*
