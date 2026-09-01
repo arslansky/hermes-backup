@@ -4,6 +4,13 @@
 
 set -euo pipefail
 
+# Load secrets from .env (chmod 600, not in git)
+if [[ -f "/home/ubuntu/scripts/yt-pipeline/.env" ]]; then
+    set -a
+    source "/home/ubuntu/scripts/yt-pipeline/.env"
+    set +a
+fi
+
 URL_OR_ID="${1:-}"
 CHAT_ID="${2:-160408068}"
 MODEL="${3:-tiny}"
@@ -30,10 +37,10 @@ DISTILL="/home/ubuntu/hermes-backup/yt-pipeline/distill_summary.sh"
 RENDER="/home/ubuntu/scripts/render_summary_pdf.py"
 SEND="/home/ubuntu/.openclaw/scripts/tg-send-doc.sh"
 TOKEN_FILE="$HOME/.openclaw/credentials/telegram-know2learn-token.txt"
-# DeepSeek official API key (source of truth: openclaw.json models.providers.deepseek-official)
-DISTILL_API_KEY="sk-391d81f900db4a39ba12ba9eba9c9efb"
-DISTILL_API_BASE="https://api.deepseek.com/v1"
-DISTILL_MODEL="deepseek-chat"
+
+# Defaults (override via /home/ubuntu/scripts/yt-pipeline/.env)
+DISTILL_API_BASE="${DISTILL_API_BASE:-https://api.deepseek.com/v1}"
+DISTILL_MODEL="${DISTILL_MODEL:-deepseek-chat}"
 
 for f in "$PIPELINE" "$DISTILL" "$RENDER" "$SEND" "$TOKEN_FILE"; do
     if [[ ! -f "$f" ]]; then
@@ -80,15 +87,16 @@ fi
 [[ -z "$TITLE" ]] && TITLE="$VIDEO_ID"
 [[ -z "$LANG" ]] && LANG="zh-Hant"
 
-# Generate a REAL structured 繁體中文摘要 via LLM distill (distill_summary.sh --llm).
-# This replaces the old raw-transcript-dump "summary" (user rule 2026-09-01: 所有 PDF 都要出中文繁體摘要, 排好版).
-PDF_OUT="$OUTPUT_DIR/$VIDEO_ID.summary.zh-Hant.pdf"
-DISTILL_API_KEY="$DISTILL_API_KEY" DISTILL_API_BASE="$DISTILL_API_BASE" DISTILL_MODEL="$DISTILL_MODEL" \
-    "$DISTILL" --video-id "$VIDEO_ID" --title "$TITLE" --duration "${DURATION:-?}" \
-    --lang "zh-Hant" --clean "$TXT_FILE" --output-dir "$OUTPUT_DIR" --llm
+# Fail fast if API key is missing; all PDFs must be Chinese summaries.
+if [[ -z "${DISTILL_API_KEY:-}" ]]; then
+    echo "❌ DISTILL_API_KEY not set. Add it to /home/ubuntu/scripts/yt-pipeline/.env" >&2
+    exit 1
+fi
 
-# distill_summary.sh writes $VIDEO_ID.summary.zh-Hant.pdf
+# Generate structured Traditional Chinese summary via LLM distill.
 PDF_OUT="$OUTPUT_DIR/$VIDEO_ID.summary.zh-Hant.pdf"
+DISTILL_API_KEY="$DISTILL_API_KEY" DISTILL_API_BASE="$DISTILL_API_BASE" DISTILL_MODEL="$DISTILL_MODEL"     "$DISTILL" --video-id "$VIDEO_ID" --title "$TITLE" --duration "${DURATION:-?}"     --lang "zh-Hant" --clean "$TXT_FILE" --output-dir "$OUTPUT_DIR" --llm
+
 if [[ ! -f "$PDF_OUT" ]]; then
     echo "❌ Summary PDF not produced by distill: $PDF_OUT" >&2
     exit 1
