@@ -1,33 +1,17 @@
 {
-  "gateway": {
-    "mode": "local",
-    "auth": {
-      "mode": "token",
-      "token": "e1cf5363fe86e33eff8a3ab8b82a10d94f207acf0d177b4986b4e9b82e6c51756437c15a503257a79c0e0235d4d93eae"
-    }
-  },
-  "agents": {
-    "defaults": {
-      "model": {
-        "primary": "minimax/MiniMax-M2.7"
-      },
-      "workspace": "/home/opc/.openclaw/workspace"
-    }
-  },
-  "channels": {
-    "telegram": {
-      "enabled": true,
-      "botToken": "8755148273:AAEM7NYxmS1SSrSKSQy5XZfIVFOjiDkfx_s"
-    }
-  },
-  "commands": {
-    "ownerAllowFrom": [
-      "telegram:160408068"
-    ]
-  },
   "meta": {
-    "lastTouchedVersion": "2026.6.11",
-    "lastTouchedAt": "2026-07-04T08:08:30.497Z"
+    "lastTouchedVersion": "2026.9.1-beta.1",
+    "migrations": {
+      "modelPolicyAllowlist": true
+    }
+  },
+  "auth": {
+    "profiles": {
+      "minimax:manual": {
+        "provider": "minimax",
+        "mode": "api_key"
+      }
+    }
   },
   "models": {
     "providers": {
@@ -40,21 +24,185 @@
             "id": "MiniMax-M2.7",
             "name": "MiniMax M2.7",
             "contextWindow": 1000000,
-            "maxTokens": 128000
+            "maxTokens": 128000,
+            "reasoning": false,
+            "input": [
+              "text"
+            ],
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0
+            },
+            "api": "anthropic-messages"
           }
         ]
+      },
+      "kimi": {
+        "api": "openai-completions",
+        "baseUrl": "https://api.kimi.com/coding/v1",
+        "apiKey": "sk-kimi-er6rh9yetdsF92KMEFqZkd7EGPCzhlljN4lJiaPaTFTEYvMid5BI7TUwuJGceQR1"
       }
     }
   },
-  "auth": {
-    "profiles": {
-      "minimax:manual": {
-        "provider": "minimax",
-        "mode": "api_key"
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "minimax/MiniMax-M2.7"
+      },
+      "workspace": "/home/opc/.openclaw/workspace",
+      "maxConcurrent": 4,
+      "subagents": {
+        "maxConcurrent": 8,
+        "archiveAfterMinutes": 60
       }
     }
+  },
+  "commands": {
+    "native": "auto",
+    "nativeSkills": "auto",
+    "restart": true,
+    "ownerAllowFrom": [
+      "telegram:160408068"
+    ]
   },
   "session": {
     "dmScope": "per-channel-peer"
+  },
+  "channels": {
+    "telegram": {
+      "enabled": true,
+      "botToken": "8755148273:AAEM7NYxmS1SSrSKSQy5XZfIVFOjiDkfx_s",
+      "dmPolicy": "pairing",
+      "groupPolicy": "allowlist",
+      "accounts": {}
+    }
+  },
+  "gateway": {
+    "mode": "local",
+    "auth": {
+      "mode": "token",
+      "token": "e1cf5363fe86e33eff8a3ab8b82a10d94f207acf0d177b4986b4e9b82e6c51756437c15a503257a79c0e0235d4d93eae"
+    }
+  },
+  "messages": {
+    "ackReactionScope": "group-mentions"
+  },
+  "plugins": {
+    "entries": {
+      "minimax": {
+        "enabled": true
+      },
+      "kimi": {
+        "enabled": true
+      }
+    }
+  },
+  "skills": {
+    "entries": {
+      "1password": {
+        "enabled": false
+      },
+      "blogwatcher": {
+        "enabled": false
+      },
+      "blucli": {
+        "enabled": false
+      },
+      "camsnap": {
+        "enabled": false
+      },
+      "coding-agent": {
+        "enabled": false
+      },
+      "eightctl": {
+        "enabled": false
+      },
+      "gemini": {
+        "enabled": false
+      },
+      "gh-issues": {
+        "enabled": false
+      },
+      "gifgrep": {
+        "enabled": false
+      },
+      "github": {
+        "enabled": false
+      },
+      "gog": {
+        "enabled": false
+      },
+      "goplaces": {
+        "enabled": false
+      },
+      "himalaya": {
+        "enabled": false
+      },
+      "mcporter": {
+        "enabled": false
+      },
+      "model-usage": {
+        "enabled": false
+      },
+      "nano-pdf": {
+        "enabled": false
+      },
+      "obsidian": {
+        "enabled": false
+      },
+      "openai-whisper": {
+        "enabled": false
+      },
+      "openai-whisper-api": {
+        "enabled": false
+      },
+      "openhue": {
+        "enabled": false
+      },
+      "oracle": {
+        "enabled": false
+      },
+      "ordercli": {
+        "enabled": false
+      },
+      "sag": {
+        "enabled": false
+      },
+      "sherpa-onnx-tts": {
+        "enabled": false
+      },
+      "songsee": {
+        "enabled": false
+      },
+      "sonoscli": {
+        "enabled": false
+      },
+      "spotify-player": {
+        "enabled": false
+      },
+      "summarize": {
+        "enabled": false
+      },
+      "tmux": {
+        "enabled": false
+      },
+      "trello": {
+        "enabled": false
+      },
+      "video-frames": {
+        "enabled": false
+      },
+      "xurl": {
+        "enabled": false
+      }
+    }
+  },
+  "wizard": {
+    "lastRunAt": "2026-07-25T16:37:13.347Z",
+    "lastRunVersion": "2026.7.2-beta.4",
+    "lastRunCommand": "doctor",
+    "lastRunMode": "local"
   }
 }
