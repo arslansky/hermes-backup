@@ -39,23 +39,28 @@
           }
         ]
       },
-      "kimi": {
+      "chatfire": {
+        "baseUrl": "https://api-mall.chatfire.cn/v1",
+        "apiKey": "sk-BcXLdOwhIoMsZ3GR23mClProwondKZbZW4mKx432dIrgAt08",
         "api": "openai-completions",
-        "baseUrl": "https://api.kimi.com/coding/v1",
-        "apiKey": "sk-kimi-er6rh9yetdsF92KMEFqZkd7EGPCzhlljN4lJiaPaTFTEYvMid5BI7TUwuJGceQR1"
+        "models": [
+          {
+            "id": "deepseek-v4-pro",
+            "name": "DeepSeek V4 Pro",
+            "contextWindow": 1000000,
+            "maxTokens": 8192
+          }
+        ]
       }
     }
   },
   "agents": {
     "defaults": {
       "model": {
-        "primary": "minimax/MiniMax-M2.7"
-      },
-      "workspace": "/home/opc/.openclaw/workspace",
-      "maxConcurrent": 4,
-      "subagents": {
-        "maxConcurrent": 8,
-        "archiveAfterMinutes": 60
+        "primary": "chatfire/deepseek-v4-pro",
+        "fallbacks": [
+          "minimax/MiniMax-M2.7"
+        ]
       }
     }
   },
