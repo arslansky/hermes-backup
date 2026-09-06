@@ -78,7 +78,7 @@
   "channels": {
     "telegram": {
       "enabled": true,
-      "botToken": "8755148273:AAEM7NYxmS1SSrSKSQy5XZfIVFOjiDkfx_s",
+      "botToken": "8755148273:AAG2a1Nmwbqst9yTMzFuOKSQV-IxyX2YpVg",
       "dmPolicy": "pairing",
       "groupPolicy": "allowlist",
       "accounts": {}
