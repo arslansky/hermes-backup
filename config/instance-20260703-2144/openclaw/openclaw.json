@@ -61,6 +61,11 @@
         "fallbacks": [
           "minimax/MiniMax-M2.7"
         ]
+      },
+      "heartbeat": {
+        "every": "12h",
+        "target": "telegram:160408068",
+        "prompt": "Perform a quiet health check (uptime, RAM, disk, load, agent/gateway status). If everything is healthy, reply with exactly NO_REPLY and say nothing. Only send a message to the user if something actually needs attention (service down, disk nearly full, repeated errors, etc). Keep any alert short and actionable."
       }
     }
   },
