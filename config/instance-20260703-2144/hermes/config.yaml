@@ -1,23 +1,29 @@
 model:
   default: kimi-k2.6
   provider: kimi-coding
+auxiliary:
+  compression:
+    provider: kimi-coding
+    model: kimi-k2.6
+timezone: Asia/Hong_Kong
 command_allowlist:
-  - kill process via pgrep/pidof expansion (self-termination)
-  - execute_code
   - script execution via -e/-c flag
-  - pipe remote content to shell
-  - shell execution via heredoc
-  - script execution via heredoc
-  - recursive delete
-  - hermes update (restarts gateway, kills running agents)
   - sudo with combined-flag privilege escalation
-  - delete in root path
-  - kill hermes/gateway process (self-termination)
-  - in-place edit of Hermes config/env
-  - overwrite system file via redirection
-  - force kill processes
   - find -delete
+  - pipe remote content to shell
+  - kill process via pgrep/pidof expansion (self-termination)
+  - kill hermes/gateway process (self-termination)
+  - script execution via heredoc
+  - overwrite system file via redirection
+  - hermes update (restarts gateway, kills running agents)
+  - delete in root path
   - stop/restart system service
+  - execute_code
+  - stop/restart hermes gateway via shell-spliced verb (kills running agents)
+  - shell execution via heredoc
+  - force kill processes
+  - recursive delete
+  - in-place edit of Hermes config/env
 onboarding:
   seen:
     profile_build_offered: true
@@ -27,9 +33,19 @@ fallback_model:
   provider: openai
   model: deepseek-v4-pro
   key_env: OPENAI_API_KEY
-timezone: Asia/Hong_Kong
-agent: {}
-auxiliary:
-  compression:
-    provider: kimi-coding
-    model: kimi-k2.6
+
+# ── Security ──────────────────────────────────────────────────────────
+# Secret redaction is ON by default — strings that look like API keys,
+# tokens, and passwords are masked in tool output, logs, and chat
+# responses before the model or user ever sees them. Set redact_secrets
+# to false to disable (e.g. when developing the redactor itself).
+# tirith pre-exec scanning is enabled by default when the tirith binary
+# is available. Configure via security.tirith_* keys or env vars
+# (TIRITH_ENABLED, TIRITH_BIN, TIRITH_TIMEOUT, TIRITH_FAIL_OPEN).
+#
+# security:
+#   redact_secrets: true
+#   tirith_enabled: true
+#   tirith_path: "tirith"
+#   tirith_timeout: 5
+#   tirith_fail_open: true
