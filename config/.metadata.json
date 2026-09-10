@@ -1,7 +1,7 @@
 {
   "version": "2.1",
-  "created_at": "2026-09-09T18:00:47+00:00",
-  "timestamp": "20260909_180047",
+  "created_at": "2026-09-10T18:00:23+00:00",
+  "timestamp": "20260910_180023",
   "hostname": "instance-20260703-2144",
   "description": "scheduled config backup",
   "backup_dir": "/home/opc/hermes-backup/config/instance-20260703-2144"
