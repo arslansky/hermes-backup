@@ -3,49 +3,36 @@ model:
   provider: kimi-coding
 auxiliary:
   compression:
-    provider: kimi-coding
-    model: kimi-k2.6
+    provider: nous
+    model: stepfun/step-3.7-flash:free
 timezone: Asia/Hong_Kong
 command_allowlist:
-  - script execution via -e/-c flag
-  - sudo with combined-flag privilege escalation
-  - find -delete
   - pipe remote content to shell
+  - delete in root path
+  - execute_code
+  - find -delete
+  - in-place edit of Hermes config/env
+  - hermes update (restarts gateway, kills running agents)
+  - stop/restart system service
+  - sudo with combined-flag privilege escalation
+  - force kill processes
   - kill process via pgrep/pidof expansion (self-termination)
+  - shell execution via heredoc
+  - overwrite project env/config file
+  - overwrite system file via redirection
+  - stop/restart hermes gateway via shell-spliced verb (kills running agents)
   - kill hermes/gateway process (self-termination)
   - script execution via heredoc
-  - overwrite system file via redirection
-  - hermes update (restarts gateway, kills running agents)
-  - delete in root path
-  - stop/restart system service
-  - execute_code
-  - stop/restart hermes gateway via shell-spliced verb (kills running agents)
-  - shell execution via heredoc
-  - force kill processes
+  - script execution via -e/-c flag
   - recursive delete
-  - in-place edit of Hermes config/env
 onboarding:
   seen:
     profile_build_offered: true
     busy_input_prompt: true
-_config_version: 40
-fallback_model:
-  provider: openai
-  model: deepseek-v4-pro
-  key_env: OPENAI_API_KEY
-
-# ── Security ──────────────────────────────────────────────────────────
-# Secret redaction is ON by default — strings that look like API keys,
-# tokens, and passwords are masked in tool output, logs, and chat
-# responses before the model or user ever sees them. Set redact_secrets
-# to false to disable (e.g. when developing the redactor itself).
-# tirith pre-exec scanning is enabled by default when the tirith binary
-# is available. Configure via security.tirith_* keys or env vars
-# (TIRITH_ENABLED, TIRITH_BIN, TIRITH_TIMEOUT, TIRITH_FAIL_OPEN).
-#
-# security:
-#   redact_secrets: true
-#   tirith_enabled: true
-#   tirith_path: "tirith"
-#   tirith_timeout: 5
-#   tirith_fail_open: true
+fallback_providers:
+  - provider: minimax
+    model: MiniMax-M2.7
+    key_env: MINIMAX_API_KEY
+  - provider: nous
+    model: upstage/solar-pro4:free
+_config_version: 42
