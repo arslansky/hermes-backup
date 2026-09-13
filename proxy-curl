@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Residential-proxy curl wrapper (US residential SOCKS5).
+# Credentials live in ~/.proxy-env (chmod 600, NOT in git).
+# Usage: proxy-curl <url>  |  or: source ~/.proxy-env && curl ...
+[ -f ~/.proxy-env ] && source ~/.proxy-env
+exec curl --proxy "${ALL_PROXY:?source ~/.proxy-env first}" "$@"
