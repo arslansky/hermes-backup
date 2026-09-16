@@ -140,4 +140,6 @@ If recovery fails and this runbook does not help:
 - Verify GitHub repo `arslansky/hermes-backup` is accessible
 - Re-run `bootstrap.sh` from a fresh VM if current VM is unrecoverable
 
+Related: `OPENCLAW-OPS-RUNBOOK.md`（日常運維：模型編制、session、排查 SOP、incident log）
+
 Last updated: 2026-07-04
