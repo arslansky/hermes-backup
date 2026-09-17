@@ -1,5 +1,7 @@
 # OpenClaw 模型 / 會話維修手冊（Ops Runbook）
 
+> **分層導航**：網絡/SSH → `TAILSCALE-MESH-SETUP.md`｜新機裝設 → `HERMES-OPENCLAW-MULTI-VM-SETUP.md`｜整機重建 → `DISASTER-RECOVERY.md`｜**總索引 → `../README.md`**
+
 Zeabur OpenClaw 日常運維、故障排查、手術修復嘅**統一入口**。維修前先讀呢份。
 配 `TAILSCALE-MESH-SETUP.md`（網絡層）同 `DISASTER-RECOVERY.md`（VM 重建層）一齊用。
 

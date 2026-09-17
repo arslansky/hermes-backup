@@ -1,5 +1,7 @@
 # 🔒 Tailscale Mesh + Network Hardening Runbook
 
+> **分層導航**：bot/model/session 故障 → `OPENCLAW-OPS-RUNBOOK.md`｜新機裝設 → `HERMES-OPENCLAW-MULTI-VM-SETUP.md`｜整機重建 → `DISASTER-RECOVERY.md`｜**總索引 → `../README.md`**
+
 Last-line maintenance record for the private Tailscale mesh and firewall lockdown
 across the three-VM infrastructure. **Hermes (on Oracle) is the designated
 last-line maintainer** — repair per this runbook before improvising.

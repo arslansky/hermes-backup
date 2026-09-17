@@ -7,23 +7,19 @@ Shared workflows, skills, and knowledge files for all VMs.
 ```
 skills/
 ├── README.md                 ← 呢個檔案
-├── multi-vm-setup.md         ← Multi-VM 架構設計
-└── ...
+└── （技能檔案放呢度）
 ```
+
+## 重要指針
+
+- **Multi-VM 架構文件**已搬去 `setup-guide/`（四份手冊，總索引喺 repo root `README.md`）
+- 舊版 `multi-vm-setup.md`（2026-07）喺 `archive/multi-vm-setup-2026-07.md` 留底
+- **VM 清單 / 故障排查 / 維修手冊一律睇 `../README.md` 嘅分層索引**，唔好喺呢度另起爐灶
 
 ## How it works
 
-Each VM can git pull this repo to get the latest skills/knowledge:
+各 VM 共享：repo pull 落 `~/hermes-backup` 就用得：
 
 ```bash
-cd /home/opc/scripts
-git pull
+cd ~/hermes-backup && git pull
 ```
-
-## VM Inventory
-
-| VM | Hostname | IP | Role | Agent |
-|---|---|---|---|---|
-| Zeabur-01 | VM-17-222-ubuntu | 43.156.247.30 | OpenClaw main, TG, WhatsApp | OpenClaw |
-| Oracle-01 | instance-20260703-2144 | 129.80.234.56 | Hermes, Discord, LLM | Hermes + OpenClaw |
-| VM-3 | TBD | TBD | Future | TBD |

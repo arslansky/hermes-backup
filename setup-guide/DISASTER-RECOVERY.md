@@ -1,5 +1,7 @@
 # Disaster Recovery Runbook
 
+> **分層導航**：bot/model/session 故障 → `OPENCLAW-OPS-RUNBOOK.md`｜網絡 → `TAILSCALE-MESH-SETUP.md`｜新機裝設 → `HERMES-OPENCLAW-MULTI-VM-SETUP.md`｜**總索引 → `../README.md`**
+
 This document describes how to recover the Hermes + OpenClaw multi-VM setup after a VM failure, accidental deletion, or complete rebuild.
 
 ## 1. Overview

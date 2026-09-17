@@ -1,5 +1,13 @@
 # 🔧 Hermes + OpenClaw Multi-VM Setup Guide
 
+> **📌 適用範圍（2026-09-17 更新）**：本文只做**新 VM 軟件裝設**（clone、symlink、cron sync）。
+> - 網絡/SSH/連線 → [`TAILSCALE-MESH-SETUP.md`](TAILSCALE-MESH-SETUP.md)（2026-09-14 起全部 tailnet 化，本文嘅公網 IP 只屬歷史記錄）
+> - bot/model/session 故障 → [`OPENCLAW-OPS-RUNBOOK.md`](OPENCLAW-OPS-RUNBOOK.md)
+> - 整機重建 → [`DISASTER-RECOVERY.md`](DISASTER-RECOVERY.md)
+> - Repo 路徑一律 `~/hermes-backup`（`~/scripts` 係 Oracle 上嘅 legacy symlink）
+>
+> 總索引：[`../README.md`](../README.md)
+
 Complete guide for setting up a new VM with Hermes Agent and/or OpenClaw, connected to the shared multi-VM infrastructure.
 
 ## Overview
